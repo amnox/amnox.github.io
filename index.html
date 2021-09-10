@@ -1,3 +1,107 @@
-<script>
-window.location = "http://amankhalid.com";
-</script>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <link rel="stylesheet" href="index.css">
+        <script src="https://cdn.jsdelivr.net/npm/pdfobject@2.2.6/pdfobject.min.js"></script>
+    </head>
+    <style>
+        .Home{display:block;}
+        .Blog{display:none;}
+        .Publications{display:none;}
+        .Bio{display:none;}
+        .Contact{display:none;}
+    </style>
+    <body>
+        <div class="root">
+            <div class="title">
+                <div class="title-item" onclick='nav("Home")''>Home</div>
+                <div class="title-item" onclick='nav("Publications")''>Publications</div>
+                <div class="title-item" onclick='nav("Blog")''>Blog</div>
+                <div class="title-item" onclick='nav("Bio")''>Bio</div>
+                <div class="title-item" onclick='nav("Contact")''>Contact</div>
+            </div>
+            <div class="Home">
+                <img class="mug" src="ak.png"/>
+            I am a first year PhD CS student at Northwestern University. I am interested in  broad computer networks research, more specifically distributed sytems. My last 2 pulished works focus on optmizing the internal data structures of large distributed systems. I also like to build systems for <a href="">global scale applicaitons</a><br><br>
+            My master's <a href="https://www.proquest.com/openview/1654a129cf91d5467da6d48ca9fff9b1/1?cbl=18750&diss=y&loginDisplay=true&pq-origsite=gscholar">thesis</a> addresses the performace gaps of running latency sensitive applications on the network edge and proposes a novel approach to manage and provision resources in a hybrid cloud.
+
+            I got my master's degree from Saint Louis University and completed my B. Tech from Amity Noida. I have 2 years experience of working as a software developer. And have worked with python, java and js.
+            <br><br>
+            <b>Recent Updates</b><br>
+            - Our work on EdgeEcho got accepted at CNSM<br>
+            - Completed my master's thesis at Saint Louis University<br>
+            - I was awarded Comsoc student award for my work on OCF<br>
+            </div>
+            <div class="Publications">
+                <div class="pub-item">Aman Khalid, Flavio Esposito, Alessio Sacco, and Steven C. Smart. <i>"EdgeEcho: An Architecture for Echocardiology at the Edge".</i> In IEEE 17th International Conference on Network and Service Management (CNSM 2021). Izmir, Turkey 25-29 October, 2021; (short paper).</div>
+                <div class="pub-item">
+                    A. Khalid and F. Esposito, <i>"Optimized Cuckoo Filters for Efficient Distributed SDN and NFV Applications,"</i> 2020 IEEE Conference on Network Function Virtualization and Software Defined Networks (NFV-SDN), 2020, pp. 77-83, doi: 10.1109/NFV-SDN50289.2020.9289870.
+                </div>
+            </div>
+            <div class="Blog">
+                <div class="blog-item">
+                    <a href="">
+                    <img class="blog-image" src="blog/lrg.png"/>
+                    <p class="blog-name">Best practices for building a large scale react application</p>
+                    </a>
+                </div>
+                <div class="blog-item">
+                    <a href="">
+                    <img class="blog-image" src="blog/s3.jpeg"/>
+                    <p class="blog-name">How I made a Service like S3 over the weekend</p>
+                    </a>
+                </div>
+                <div class="blog-item">
+                    <a href="">
+                    <img class="blog-image" src="blog/srv.png"/>
+                    <p class="blog-name">Top 5 reasons why serverless architecture is the best fit for your application</p>
+                    </a>
+                </div>
+                <div class="blog-item">
+                    <a href="">
+                    <img class="blog-image" src="blog/sel.jpeg"/>
+                    <p class="blog-name">Scrping Instagram With Selenium</p>
+                    </a>
+                </div>
+                <div class="blog-item">
+                    <a href="">
+                    <img class="blog-image" src="blog/acc.jpg"/>
+                    <p class="blog-name">Scroll accordion animation with js</p>
+                    </a>
+                </div>
+                <div class="blog-item">
+                    <a href="">
+                    <img class="blog-image" src="blog/spa.jpeg"/>
+                    <p class="blog-name">Creating Awesome SPAs with react</p>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="Bio"><div id="resume"></div></div>
+            <div class="Contact">
+                <div class="gfrm"><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeMnsAr8BxzXvWvvaeE0CKVyCahXD-1hoE_G4I2tLZy4jLzBw/viewform?embedded=true" width="640" height="459" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe></div>
+            </div>
+        </div>
+
+    </body>
+    <script>
+        const pages = ['Home','Publications','Blog','Bio','Contact']
+        function nav(item){
+            
+            for (const element of pages) {
+            
+                x = document.getElementsByClassName(element)[0]
+                if(element==item){
+                    x.style.display = "block";
+                }else{
+                    x.style.display = "none";
+                }
+            }
+        }
+        
+        PDFObject.embed("resume.pdf", "#resume");
+    </script>
+    
+</html>

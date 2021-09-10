@@ -1,0 +1,87 @@
+@font-face{
+    font-family: 'PoppinsBlack';
+    src: url(font/Poppins-Black.ttf)
+}
+
+@font-face{
+    font-family: 'PoppinsThin';
+    src: url(font/Poppins-Thin.ttf)
+}
+
+@font-face{
+    font-family: 'PoppinsLight';
+    src: url(font/Poppins-Light.ttf)
+}
+
+.root{
+    float: none;
+    margin: 0 20% 0 20%;
+}
+
+.title{
+    display: block;
+    width: 100%;
+    float: left;
+    margin: 2% 0 2% 0;
+    font-family: PoppinsBlack;
+    color: #0000009c;
+    font-size: x-large;
+}
+
+.Home{
+    font-family: PoppinsLight;
+    font-size: x-large;
+}
+
+.title-item{
+    float: left;
+    margin-right: 2%;
+    cursor: pointer;
+}
+
+.blog-item{
+    margin-right: 3%;
+    width: 30%;
+    display: block;
+    float: left;
+}
+
+.blog-name{
+    font-family: 'PoppinsLight';
+    color: black;
+}
+
+.blog-image{
+    width: 100%;
+    height: 206px;
+    object-fit: contain;
+}
+
+.mug{
+    float: left;
+    width: 30%;
+    height: 360px;
+    margin: 0 2% 0 0;
+    object-fit: cover;
+    object-position: 0 10%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.pub-item{
+    margin: 0 0 2% 0;
+    width: 100%;
+    float: left;
+    font-size: large;
+    font-family: 'PoppinsLight';
+}
+
+.Bio{
+    height: 800px;
+}
+
+#resume{
+    height:100%
+}
