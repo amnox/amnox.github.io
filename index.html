@@ -5,6 +5,11 @@
         <meta content="utf-8" http-equiv="encoding">
         <link rel="stylesheet" href="index.css">
         <script src="https://cdn.jsdelivr.net/npm/pdfobject@2.2.6/pdfobject.min.js"></script>
+        <script defer src="js/all.js"></script>
+        <link rel="icon" href="/tile.png" type="image/x-icon">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aman Khalid - Research, Code, and Networks</title>
+        <meta name=”description” content="I am a first year PhD student at NU. I am interested in broad networks research with a focus on Distributed Systems">
     </head>
     <style>
         .Home{display:block;}
@@ -21,6 +26,19 @@
                 <div class="title-item" onclick='nav("Blog")''>Blog</div>
                 <div class="title-item" onclick='nav("Bio")''>Bio</div>
                 <div class="title-item" onclick='nav("Contact")''>Contact</div>
+            </div>
+            <div class="title-mobile">
+                <div class="dropdown">
+                    <button onclick="myFunction()" class="dropbtn"><i class="fas fa-bars"></i></button>
+                    <div id="myDropdown" class="dropdown-content">
+                        <a href="#home" onclick='nav("Home")''>Home</a>
+                        <a href="#publications" onclick='nav("Publications")''>Publications</a>
+                        <a href="#blog" onclick='nav("Blog")''>Blog</a>
+                        <a href="#bio" onclick='nav("Bio")''>Bio</a>
+                        <a href="#contact" onclick='nav("Contact")''>Contact</a>
+                    </div>
+                </div>
+                <div class="title-item" id="title-header">Home</div>
             </div>
             <div class="Home">
                 <img class="mug" src="ak.png"/>
@@ -42,37 +60,37 @@
             </div>
             <div class="Blog">
                 <div class="blog-item">
-                    <a href="">
+                    <a href="https://buttercms.com/blog/best-practices-for-building-a-large-scale-react-application" target="_blank">
                     <img class="blog-image" src="blog/lrg.png"/>
                     <p class="blog-name">Best practices for building a large scale react application</p>
                     </a>
                 </div>
-                <div class="blog-item">
-                    <a href="">
+                <div class="blog-item" >
+                    <a href="https://medium.com/hackernoon/how-i-made-a-service-like-s3-over-the-weekend-bfa83e224dc7" target="_blank">
                     <img class="blog-image" src="blog/s3.jpeg"/>
                     <p class="blog-name">How I made a Service like S3 over the weekend</p>
                     </a>
                 </div>
                 <div class="blog-item">
-                    <a href="">
+                    <a href="https://docs.google.com/document/d/e/2PACX-1vSejM3Yq1YUDA0S_h-bundUrSo19PPsaloJg5qaKTg_b1AOY4jihQjrwLewsxBbhiT16kdSAD1_08T9/pub" target="_blank">
                     <img class="blog-image" src="blog/srv.png"/>
                     <p class="blog-name">Top 5 reasons why serverless architecture is the best fit for your application</p>
                     </a>
                 </div>
                 <div class="blog-item">
-                    <a href="">
+                    <a href="https://www.linkedin.com/pulse/scraping-instagram-selenuim-aman-khalid/" target="_blank">
                     <img class="blog-image" src="blog/sel.jpeg"/>
                     <p class="blog-name">Scrping Instagram With Selenium</p>
                     </a>
                 </div>
                 <div class="blog-item">
-                    <a href="">
+                    <a href="https://github.com/amnox/scroll-accordion/wiki" target="_blank">
                     <img class="blog-image" src="blog/acc.jpg"/>
                     <p class="blog-name">Scroll accordion animation with js</p>
                     </a>
                 </div>
                 <div class="blog-item">
-                    <a href="">
+                    <a href="https://medium.com/hackernoon/creating-awesome-spas-with-react-66b4e2043621" target="_blank">
                     <img class="blog-image" src="blog/spa.jpeg"/>
                     <p class="blog-name">Creating Awesome SPAs with react</p>
                     </a>
@@ -93,8 +111,10 @@
             for (const element of pages) {
             
                 x = document.getElementsByClassName(element)[0]
+                y = document.getElementById("title-header")
                 if(element==item){
                     x.style.display = "block";
+                    y.innerHTML=item
                 }else{
                     x.style.display = "none";
                 }
@@ -102,6 +122,26 @@
         }
         
         PDFObject.embed("resume.pdf", "#resume");
+
+        /* When the user clicks on the button, 
+        toggle between hiding and showing the dropdown content */
+        function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+            }
+        }
+        }
     </script>
     
 </html>
