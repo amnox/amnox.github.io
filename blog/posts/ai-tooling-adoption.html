@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What I Learned Leading Our Team's AI Tooling Adoption | Aman Khalid</title>
+    <meta name="description" content="Lessons from introducing Claude Code to a large engineering organization at Expedia.">
+    <link rel="icon" href="/tile.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .blog-post {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 120px 25px 100px;
+        }
+        .blog-post-header {
+            margin-bottom: 50px;
+        }
+        .blog-post-date {
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .blog-post-title {
+            font-size: clamp(28px, 5vw, 42px);
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .blog-post-meta {
+            display: flex;
+            gap: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .blog-post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .blog-post-content p {
+            margin-bottom: 25px;
+        }
+        .blog-post-content h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin: 50px 0 20px;
+        }
+        .blog-post-content h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 30px 0 15px;
+        }
+        .blog-post-content ul, .blog-post-content ol {
+            margin-bottom: 25px;
+            padding-left: 25px;
+        }
+        .blog-post-content li {
+            margin-bottom: 10px;
+        }
+        .blog-post-content code {
+            background: var(--bg-secondary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+        }
+        .blog-post-content pre {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+        .blog-post-content pre code {
+            padding: 0;
+            background: none;
+        }
+        .blog-post-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav" id="nav">
+        <div class="nav-content">
+            <a href="/" class="nav-logo">AK</a>
+            <div class="nav-links">
+                <a href="/#about" class="nav-link">About</a>
+                <a href="/#experience" class="nav-link">Experience</a>
+                <a href="/#projects" class="nav-link">Projects</a>
+                <a href="/#blog" class="nav-link">Blog</a>
+                <a href="/#contact" class="nav-link">Contact</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <article class="blog-post">
+        <a href="/#blog" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all posts
+        </a>
+
+        <header class="blog-post-header">
+            <p class="blog-post-date">September 2024</p>
+            <h1 class="blog-post-title">What I Learned Leading Our Team's AI Tooling Adoption</h1>
+            <div class="blog-post-meta">
+                <span>8 min read</span>
+                <span>AI, Developer Tools, Leadership</span>
+            </div>
+        </header>
+
+        <div class="blog-post-content">
+            <p>
+                About six months ago, my manager asked if I wanted to lead our team's adoption of AI coding assistants.
+                I said yes before fully understanding what I was signing up for. Looking back, it was one of the more
+                interesting things I've done at Expedia, and I learned a lot about both the technology and how to
+                introduce new tools to skeptical engineers.
+            </p>
+
+            <h2>The Starting Point</h2>
+
+            <p>
+                Our team was like most enterprise engineering teams: a mix of experienced engineers who had seen
+                plenty of "next big things" come and go, and newer folks who were curious but busy shipping features.
+                Nobody was asking for AI tools. We had Copilot available but adoption was pretty low.
+            </p>
+
+            <p>
+                The company decided to pilot Claude Code through AWS Bedrock, and they needed teams to try it out
+                and report back. I volunteered partly because I was curious, and partly because I figured someone
+                should go first and figure out what works.
+            </p>
+
+            <h2>What Actually Worked</h2>
+
+            <h3>Starting with my own work</h3>
+
+            <p>
+                The first thing I did was just use it myself for a few weeks without telling anyone. This turned
+                out to be important. When people eventually asked questions, I could point to real PRs I had
+                shipped with AI assistance, not theoretical examples.
+            </p>
+
+            <p>
+                My first real win was integrating a new gRPC service. It was the kind of task I'd done before:
+                write the client code, handle errors, add logging, write tests. Normally takes a day or two.
+                With Claude helping, I had a working implementation in about three hours. The code wasn't perfect
+                out of the box, but it gave me a solid starting point.
+            </p>
+
+            <h3>Being honest about limitations</h3>
+
+            <p>
+                One thing that helped build trust was being upfront about what the tools couldn't do. AI coding
+                assistants are really good at some things: boilerplate code, test generation, explaining unfamiliar
+                codebases, writing Splunk queries. They're not great at understanding our specific business logic
+                or catching subtle bugs in complex distributed systems.
+            </p>
+
+            <p>
+                When I showed demos, I made sure to include examples where the AI got things wrong. Engineers
+                can smell marketing BS from a mile away. Showing the rough edges actually made people more
+                willing to try it, because they knew I wasn't overselling.
+            </p>
+
+            <h3>Making it easy to start</h3>
+
+            <p>
+                I wrote up a simple getting started guide: how to get access, how to configure it, and three
+                specific tasks to try first. The tasks were things everyone on the team does regularly:
+            </p>
+
+            <ul>
+                <li>Write unit tests for an existing method</li>
+                <li>Generate a Splunk query for a specific metric</li>
+                <li>Explain what a piece of unfamiliar code does</li>
+            </ul>
+
+            <p>
+                Starting with these low-stakes tasks let people get comfortable with the tool before trying
+                anything more ambitious.
+            </p>
+
+            <h2>What Didn't Work</h2>
+
+            <h3>Trying to mandate usage</h3>
+
+            <p>
+                Early on, there was some pressure from above to track adoption metrics. How many people are
+                using it? How often? This backfired. Engineers started using it performatively rather than
+                productively. I pushed back and got us focused on outcomes instead: did it help ship things
+                faster? Did code quality stay the same or improve?
+            </p>
+
+            <h3>Expecting it to replace thinking</h3>
+
+            <p>
+                A few people tried to use AI tools as a shortcut for understanding code. They'd paste in
+                something complex, get an explanation, and move on without really grasping it. This led to
+                some bugs that could have been avoided. The tools work best when you're using them to go
+                faster at things you already understand, not to skip learning entirely.
+            </p>
+
+            <h2>The Interesting Philosophical Bit</h2>
+
+            <p>
+                Here's what surprised me: the engineers who got the most value weren't the ones who used AI
+                the most. They were the ones who had really clear mental models of what they were building.
+                They knew exactly what they wanted and used AI to get there faster.
+            </p>
+
+            <p>
+                It's kind of like having a really fast assistant. If you know what you want, a fast assistant
+                is incredibly useful. If you're not sure what you want, a fast assistant just helps you do
+                the wrong thing more efficiently.
+            </p>
+
+            <h2>Where We Are Now</h2>
+
+            <p>
+                Six months in, about 60% of the team uses AI tools regularly. That's not 100%, and I don't
+                think it needs to be. Some people genuinely work better without them, and that's fine.
+            </p>
+
+            <p>
+                The biggest change is in how we write tests. Test generation is one of those things AI is
+                genuinely good at, and our coverage has gone up without feeling like a chore. We've also
+                gotten better at writing Splunk queries, which used to be something only a few people on
+                the team felt comfortable with.
+            </p>
+
+            <p>
+                Am I worried about AI replacing engineers? Not really. The people who were good at their jobs
+                before are still good at their jobs, just a bit faster. The hard parts of software engineering
+                are still the hard parts: understanding requirements, designing systems, debugging production
+                issues, working with people. AI doesn't help much with any of that.
+            </p>
+
+            <h2>Advice for Others</h2>
+
+            <p>
+                If you're thinking about introducing AI tools to your team:
+            </p>
+
+            <ul>
+                <li>Use them yourself first. Seriously use them, on real work, for at least a few weeks.</li>
+                <li>Be honest about limitations. Engineers will figure them out anyway, and you'll lose credibility if you oversold.</li>
+                <li>Start with low-stakes tasks that provide obvious value (tests, queries, documentation).</li>
+                <li>Focus on outcomes, not adoption metrics.</li>
+                <li>Give people permission to not use them if they don't find them helpful.</li>
+            </ul>
+
+            <p>
+                AI coding tools are useful. They're not magic. The hype cycle will eventually calm down, and
+                we'll figure out where they fit in normal engineering workflows. In the meantime, it's been
+                a fun experiment.
+            </p>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p>Built by Aman Khalid</p>
+    </footer>
+
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') html.setAttribute('data-theme', 'light');
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

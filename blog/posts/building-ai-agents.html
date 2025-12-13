@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What I Learned Building an AI Agent From Scratch | Aman Khalid</title>
+    <meta name="description" content="Lessons from building ShedboxAI Agent - a conversational AI that turns natural language into data workflows.">
+    <link rel="icon" href="/tile.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .blog-post {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 120px 25px 100px;
+        }
+        .blog-post-header {
+            margin-bottom: 50px;
+        }
+        .blog-post-date {
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .blog-post-title {
+            font-size: clamp(28px, 5vw, 42px);
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .blog-post-meta {
+            display: flex;
+            gap: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .blog-post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .blog-post-content p {
+            margin-bottom: 25px;
+        }
+        .blog-post-content h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin: 50px 0 20px;
+        }
+        .blog-post-content h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 30px 0 15px;
+        }
+        .blog-post-content ul, .blog-post-content ol {
+            margin-bottom: 25px;
+            padding-left: 25px;
+        }
+        .blog-post-content li {
+            margin-bottom: 10px;
+        }
+        .blog-post-content code {
+            background: var(--bg-secondary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+        }
+        .blog-post-content pre {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+        .blog-post-content pre code {
+            padding: 0;
+            background: none;
+        }
+        .blog-post-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav" id="nav">
+        <div class="nav-content">
+            <a href="/" class="nav-logo">AK</a>
+            <div class="nav-links">
+                <a href="/#about" class="nav-link">About</a>
+                <a href="/#experience" class="nav-link">Experience</a>
+                <a href="/#projects" class="nav-link">Projects</a>
+                <a href="/#blog" class="nav-link">Blog</a>
+                <a href="/#contact" class="nav-link">Contact</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <article class="blog-post">
+        <a href="/#blog" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all posts
+        </a>
+
+        <header class="blog-post-header">
+            <p class="blog-post-date">January 2025</p>
+            <h1 class="blog-post-title">What I Learned Building an AI Agent From Scratch</h1>
+            <div class="blog-post-meta">
+                <span>15 min read</span>
+                <span>AI, Agents, Python, Architecture</span>
+            </div>
+        </header>
+
+        <div class="blog-post-content">
+            <p>
+                I spent the last couple months building <a href="https://shedboxai.com">ShedboxAI Agent</a>, a conversational
+                AI that turns natural language into data workflows. The kind of thing where you say "analyze my sales data
+                and find the top performing regions" and it figures out how to make that happen.
+            </p>
+
+            <p>
+                Along the way I learned a bunch of stuff that I wish someone had told me before I started. This post is
+                that list. No hype, no "AI will change everything" nonsense. Just practical lessons from actually building
+                this thing.
+            </p>
+
+            <h2>The Big Insight: Let the LLM Write Code, Not Choose Tools</h2>
+
+            <p>
+                Most AI agent frameworks work like this: you define a bunch of tools (functions), the LLM picks which
+                ones to call, and you execute them. Sounds reasonable. Turns out it's actually pretty wasteful.
+            </p>
+
+            <p>
+                Every time you send a message to the LLM, you have to include the full schema of every tool. That's
+                a lot of tokens. And the LLM often picks the wrong tool anyway, especially when tools have similar
+                names or overlapping functionality.
+            </p>
+
+            <p>
+                What we ended up doing instead: give the LLM a Python sandbox and let it write code. The code can
+                call our APIs directly. No tool selection step. No schema overhead.
+            </p>
+
+            <p>
+                This saved us something like 98% of tokens compared to the traditional approach. And the LLM was
+                actually better at writing code to accomplish tasks than it was at selecting from a menu of tools.
+                Go figure.
+            </p>
+
+            <p>
+                The catch is you need a secure sandbox. We used RestrictedPython to limit what the code can do.
+                Can't let an LLM run arbitrary code on your server. But once you have that, the code execution
+                approach is way more flexible.
+            </p>
+
+            <h2>One Big Agent is Worse Than Many Small Ones</h2>
+
+            <p>
+                My first attempt was a single agent that handled everything. It had a huge context window (like 180K
+                tokens), knew about all our APIs, and was supposed to figure out how to do any task.
+            </p>
+
+            <p>
+                It sucked. The agent would get confused, mix up context from earlier in the conversation, and
+                make weird decisions because it was trying to keep track of too much stuff at once.
+            </p>
+
+            <p>
+                What actually works: a small orchestrator that delegates to specialist agents. The orchestrator
+                stays lean (around 60K tokens of context) and its only job is to figure out what kind of task
+                this is and hand it off to the right specialist.
+            </p>
+
+            <p>
+                Specialists are beautiful because they're disposable. They spin up fresh for each task with no
+                memory of previous conversations. No context pollution. They do their one thing, return the
+                result, and get garbage collected.
+            </p>
+
+            <p>
+                We ended up with three specialists:
+            </p>
+
+            <ul>
+                <li>An analysis specialist for investigating data</li>
+                <li>A YAML builder for generating workflow configs</li>
+                <li>A results interpreter for explaining what happened</li>
+            </ul>
+
+            <p>
+                Each one has its own 40K token budget. The orchestrator can run them in parallel if needed.
+                And because they're stateless, you don't get the weird bugs where the agent remembers something
+                from 50 turns ago that's no longer relevant.
+            </p>
+
+            <h2>Context Management is the Whole Game</h2>
+
+            <p>
+                This was the thing I most underestimated. In a long conversation, your context window fills up.
+                When it's full, something has to give. Either you truncate (and lose important history) or you
+                compress (and lose some detail). Neither is great.
+            </p>
+
+            <p>
+                The naive approach is to wait until you're at 95% capacity and then panic-compress. We tried
+                this. It's terrible. Compressing a lot at once causes you to lose important context, and then
+                the agent makes dumb decisions, and users hate you.
+            </p>
+
+            <p>
+                What works better: compress early and often. We trigger compression at 85% capacity. Smaller,
+                more frequent compressions preserve more context than one big one. It's counterintuitive but true.
+            </p>
+
+            <p>
+                We also split context into tiers:
+            </p>
+
+            <ul>
+                <li><strong>Hot context</strong> (in-memory, exact): The system prompt, current task, last 5 messages. This never gets compressed.</li>
+                <li><strong>Warm context</strong> (summarized): Conversation history, past decisions, workspace metadata. Compressed but accessible.</li>
+                <li><strong>Cold context</strong> (RAG-retrieved): Documentation, data schemas, workflow history. Only pulled in when relevant.</li>
+            </ul>
+
+            <p>
+                This three-tier approach let us handle 100+ turn conversations without the agent losing track
+                of what it was doing. The key insight is that not all context is equally important. Recent
+                stuff matters more than old stuff. Current task matters more than background knowledge.
+            </p>
+
+            <h2>Make Errors Visible to the LLM</h2>
+
+            <p>
+                When the agent generates a YAML workflow and it fails to execute, what do you do? The obvious
+                thing is to tell the user "that didn't work" and ask them to try again. But users hate that.
+            </p>
+
+            <p>
+                What we do instead: parse the error logs, extract the actual error messages, and feed them
+                back to the LLM. Let the LLM debug its own code.
+            </p>
+
+            <p>
+                This sounds obvious in retrospect but it took me a while to figure out. The LLM is actually
+                really good at debugging when it can see the error. It just needs the information.
+            </p>
+
+            <p>
+                We have a retry loop that goes: generate YAML, execute it, if it fails parse the logs, feed
+                the error back to the LLM, let it try again. Up to 3 attempts.
+            </p>
+
+            <p>
+                This fixed about 80% of errors that would have otherwise required user intervention. The
+                remaining 20% are usually fundamental misunderstandings of what the user wanted, which you
+                can't fix with retries anyway.
+            </p>
+
+            <h2>Use Files as APIs</h2>
+
+            <p>
+                Here's a pattern that seemed dumb to me at first but turned out to be really useful: instead
+                of having specialists call APIs to get data schemas, we just write the schema to a file and
+                have everyone read from that file.
+            </p>
+
+            <p>
+                On startup, we run an introspection command that looks at all the data sources and writes
+                out a markdown file with column names, types, sample rows, row counts, everything. Then
+                every specialist just reads that file.
+            </p>
+
+            <p>
+                Why is this better than API calls?
+            </p>
+
+            <ul>
+                <li>Faster. File reads are instant, API calls have latency.</li>
+                <li>Single source of truth. Everyone sees the same data.</li>
+                <li>Works offline. Once the file exists, no network needed.</li>
+                <li>Easier to debug. You can just look at the file.</li>
+            </ul>
+
+            <p>
+                The tradeoff is staleness. If the data changes, the file is out of date. But for our use case
+                that's fine. We regenerate the file at the start of each session and data doesn't usually
+                change mid-conversation.
+            </p>
+
+            <h2>Contract-First Architecture Saved My Sanity</h2>
+
+            <p>
+                Every interaction between components is defined by a Pydantic schema. The orchestrator sends
+                a PlanRequest to the planner and gets back an ExecutionPlan. The orchestrator sends SpecialistInput
+                to specialists and gets back SpecialistOutput. Everything is typed.
+            </p>
+
+            <p>
+                This sounds like busywork but it's actually essential. When you're building a system with
+                multiple async agents talking to each other, you need to know exactly what each one expects
+                and produces. Otherwise you spend all your time debugging weird type mismatches.
+            </p>
+
+            <p>
+                The other benefit: you can develop in parallel. I could work on the orchestrator while someone
+                else worked on specialists, and as long as we both matched the schema it would work when we
+                merged. No "let me see your code so I know what format to send" conversations.
+            </p>
+
+            <h2>One Command is Better Than Three</h2>
+
+            <p>
+                Early versions of the CLI had multiple commands: <code>shedbox-agent init</code> for setup,
+                <code>shedbox-agent chat</code> for conversations, <code>shedbox-agent reinit</code> to
+                start over. Users kept running the wrong one.
+            </p>
+
+            <p>
+                What we have now: just <code>shedbox-agent</code>. The CLI figures out what to do.
+            </p>
+
+            <ul>
+                <li>First run? Run the onboarding flow, then start chatting.</li>
+                <li>Setup incomplete? Resume from where you left off.</li>
+                <li>Already set up? Jump straight to chat.</li>
+                <li>Want to start over? Pass <code>--reinit</code>.</li>
+            </ul>
+
+            <p>
+                One command with smart defaults. Users don't have to remember anything. This sounds small
+                but it made a huge difference in how people felt about using the tool.
+            </p>
+
+            <h2>Debug Mode is Not Optional</h2>
+
+            <p>
+                We have an environment variable, <code>SHEDBOX_AGENT_DEBUG=true</code>, that makes the
+                orchestrator log everything. Which specialist it's spawning, why it made that decision,
+                what the token budget is, what context is being passed around.
+            </p>
+
+            <p>
+                This was invaluable for debugging. When something goes wrong in a multi-agent system,
+                it's really hard to figure out why. Having a mode where you can see exactly what
+                decisions were made and in what order saves hours of head-scratching.
+            </p>
+
+            <p>
+                The key is making it opt-in. In normal operation you don't want all that noise. But
+                when you're debugging, you want all of it.
+            </p>
+
+            <h2>The Things That Didn't Work</h2>
+
+            <p>
+                Not everything was a success. Some stuff we tried that failed:
+            </p>
+
+            <h3>Fancy tool selection algorithms</h3>
+            <p>
+                We spent way too long building a "smart" system for selecting which tool to use. Keyword
+                matching, semantic similarity, learned embeddings. All of it was worse than just letting
+                the LLM write code directly. Ended up ripping the whole thing out.
+            </p>
+
+            <h3>Long-lived specialists</h3>
+            <p>
+                We tried keeping specialists around between tasks so they could remember context. It just
+                made them confused. They'd apply lessons from previous tasks to the current one in ways
+                that didn't make sense. Disposable specialists are better.
+            </p>
+
+            <h3>Aggressive caching</h3>
+            <p>
+                We cached LLM responses thinking it would save money. But conversations are so variable
+                that cache hit rates were terrible. We spent more time maintaining the cache than we
+                saved in API costs. Removed it.
+            </p>
+
+            <h2>What I'd Do Differently</h2>
+
+            <p>
+                If I started over, I'd do a few things differently:
+            </p>
+
+            <ul>
+                <li><strong>Start with context management.</strong> I treated it as an afterthought and had to retrofit it. Should have been the first thing I designed.</li>
+                <li><strong>Skip the tool registry entirely.</strong> Went straight to code execution. Would have saved weeks.</li>
+                <li><strong>Build more integration tests earlier.</strong> Unit tests are fine but the bugs that matter are in how components interact.</li>
+                <li><strong>Keep the LLM calls dumber.</strong> Every time I tried to make prompts clever, they got worse. Simple, direct prompts work better.</li>
+            </ul>
+
+            <h2>Is It Worth Building Your Own?</h2>
+
+            <p>
+                Honestly, it depends. There are good agent frameworks out there now (LangChain, CrewAI,
+                AutoGen). If your use case fits their patterns, use them. Don't build from scratch for
+                the sake of it.
+            </p>
+
+            <p>
+                We built custom because we had specific requirements around the code execution model and
+                context management that didn't fit existing frameworks. And because I wanted to learn
+                how this stuff actually works, not just how to use someone else's abstractions.
+            </p>
+
+            <p>
+                If you do build your own, the lessons above should save you some pain. The core insight
+                is that AI agents are really just distributed systems with an LLM in the loop. All the
+                normal distributed systems wisdom applies. Keep components small. Make failures visible.
+                Design for observability. Use contracts between components.
+            </p>
+
+            <p>
+                The LLM part is almost the easy part. The hard part is everything around it.
+            </p>
+
+            <p>
+                Check out <a href="https://shedboxai.com">ShedboxAI</a> if you want to see how it turned out.
+                It's open source, so you can dig into the code if any of this sounds interesting.
+            </p>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p>Built by Aman Khalid</p>
+    </footer>
+
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') html.setAttribute('data-theme', 'light');
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

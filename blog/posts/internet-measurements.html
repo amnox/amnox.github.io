@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Running Internet Measurements Taught Me About Distributed Systems | Aman Khalid</title>
+    <meta name="description" content="Lessons from a year of sending packets across the globe and watching what happened.">
+    <link rel="icon" href="/tile.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .blog-post {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 120px 25px 100px;
+        }
+        .blog-post-header {
+            margin-bottom: 50px;
+        }
+        .blog-post-date {
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .blog-post-title {
+            font-size: clamp(28px, 5vw, 42px);
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .blog-post-meta {
+            display: flex;
+            gap: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .blog-post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .blog-post-content p {
+            margin-bottom: 25px;
+        }
+        .blog-post-content h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin: 50px 0 20px;
+        }
+        .blog-post-content h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 30px 0 15px;
+        }
+        .blog-post-content ul, .blog-post-content ol {
+            margin-bottom: 25px;
+            padding-left: 25px;
+        }
+        .blog-post-content li {
+            margin-bottom: 10px;
+        }
+        .blog-post-content code {
+            background: var(--bg-secondary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+        }
+        .blog-post-content pre {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+        .blog-post-content pre code {
+            padding: 0;
+            background: none;
+        }
+        .blog-post-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav" id="nav">
+        <div class="nav-content">
+            <a href="/" class="nav-logo">AK</a>
+            <div class="nav-links">
+                <a href="/#about" class="nav-link">About</a>
+                <a href="/#experience" class="nav-link">Experience</a>
+                <a href="/#projects" class="nav-link">Projects</a>
+                <a href="/#blog" class="nav-link">Blog</a>
+                <a href="/#contact" class="nav-link">Contact</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <article class="blog-post">
+        <a href="/#blog" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all posts
+        </a>
+
+        <header class="blog-post-header">
+            <p class="blog-post-date">December 2022</p>
+            <h1 class="blog-post-title">What Running Internet Measurements Taught Me About Distributed Systems</h1>
+            <div class="blog-post-meta">
+                <span>10 min read</span>
+                <span>Networking, Research, Infrastructure</span>
+            </div>
+        </header>
+
+        <div class="blog-post-content">
+            <p>
+                I spent a year at Northwestern sending packets across the globe and watching what happened.
+                This sounds like a weird hobby, but it's actually serious research. Understanding how the
+                internet works at a physical and routing level turns out to be surprisingly useful when
+                you're building distributed systems for production use.
+            </p>
+
+            <p>
+                Here's what I learned.
+            </p>
+
+            <h2>The Internet is a Bunch of Agreements</h2>
+
+            <p>
+                The first thing that surprised me is how informal the internet's structure really is.
+                There's no master plan. No central authority. Just thousands of organizations that have
+                agreed to connect to each other and pass traffic around.
+            </p>
+
+            <p>
+                These agreements are called "peering relationships." Some are formal contracts between
+                large providers. Some are handshake deals. Some are implicit, based on physical proximity
+                in data centers. The internet works because everyone generally cooperates, not because
+                anyone's in charge.
+            </p>
+
+            <p>
+                This has real implications for distributed systems. When you deploy services across
+                multiple cloud regions, you're relying on these peering relationships. If AWS and
+                Azure decide to route traffic through different paths, your inter-region latency
+                changes. And you have essentially no control over it.
+            </p>
+
+            <h2>Geography Still Matters</h2>
+
+            <p>
+                We like to think of the internet as this abstract cloud where everything is
+                instantaneous. It's not. Light travels fast, but not infinitely fast. And the
+                cables that carry internet traffic follow real geographic paths.
+            </p>
+
+            <p>
+                I ran measurements from 33 cloud instances across 18 countries. One thing became
+                very clear: the path packets take often makes no sense geographically. Traffic from
+                Australia to Indonesia might route through the US. Traffic within Europe might go
+                through a submarine cable to the US and back.
+            </p>
+
+            <p>
+                Why? Because routing decisions are made based on business agreements, not geography.
+                ISP A might not have a peering deal with ISP B, so traffic goes through ISP C even
+                if that adds 50ms of latency.
+            </p>
+
+            <p>
+                The lesson for distributed systems: don't assume that "closer" means "faster." Test
+                your actual latency between regions. You might be surprised.
+            </p>
+
+            <h2>Submarine Cables Are Everything</h2>
+
+            <p>
+                About 99% of intercontinental internet traffic goes through submarine cables. These
+                are literal cables on the ocean floor. Some of them are decades old. Some are brand
+                new fiber optic lines with terabits of capacity.
+            </p>
+
+            <p>
+                Submarine cables fail more often than you'd think. Ships drop anchors on them.
+                Earthquakes damage them. Sometimes they just break. When a major cable goes down,
+                traffic reroutes, latency spikes, and sometimes connections just fail.
+            </p>
+
+            <p>
+                I built a monitoring system to track submarine cable outages in real-time. The goal
+                was to understand how the internet's physical infrastructure affects connectivity.
+                What we found was that the internet is surprisingly resilient to individual failures,
+                but major cable cuts do cause real problems.
+            </p>
+
+            <p>
+                For production systems, this means: if you're serving global users, understand the
+                physical paths between your regions. Have redundancy. Monitor for connectivity issues
+                at the network level, not just the application level.
+            </p>
+
+            <h2>BGP is Both Amazing and Terrifying</h2>
+
+            <p>
+                BGP (Border Gateway Protocol) is the protocol that makes the internet work. It's how
+                networks tell each other "I can reach this destination, send traffic to me." Every
+                router on the internet runs BGP and exchanges routing information with its neighbors.
+            </p>
+
+            <p>
+                BGP is amazing because it works at all. There are millions of networks, and somehow
+                traffic finds its way from source to destination most of the time. It's a genuinely
+                impressive feat of decentralized coordination.
+            </p>
+
+            <p>
+                BGP is terrifying because it's based entirely on trust. When a network announces "I
+                can reach Google," other networks believe it. There's no authentication. This leads
+                to incidents where someone misconfigures their router and accidentally claims they're
+                the best path to half the internet. Traffic gets sucked into their network, overloading
+                it and breaking connectivity for millions of users.
+            </p>
+
+            <p>
+                These are called "BGP hijacks" and they happen more often than you'd like. Sometimes
+                they're accidents. Sometimes they're malicious. Either way, there's not much you can
+                do about them from an application level.
+            </p>
+
+            <p>
+                The takeaway: the internet's routing layer is inherently unreliable. Build your
+                applications to handle intermittent connectivity issues. Don't assume that just
+                because DNS resolves and you get an IP address, packets will actually reach their
+                destination.
+            </p>
+
+            <h2>Measurement is Harder Than It Sounds</h2>
+
+            <p>
+                When you're running measurements at scale, you discover all kinds of problems:
+            </p>
+
+            <ul>
+                <li>Time synchronization across 33 instances in 18 countries is hard</li>
+                <li>Network conditions change constantly, so point-in-time measurements can be misleading</li>
+                <li>Cloud providers sometimes route your traffic through unexpected paths</li>
+                <li>Some destinations rate-limit or block measurement traffic</li>
+                <li>Results can be skewed by local conditions (overloaded host, noisy neighbor, etc.)</li>
+            </ul>
+
+            <p>
+                I ended up processing 179 measurements per day from 358 instances. That's a lot of
+                data, and a lot of ways for it to be wrong. The data pipeline I built had to handle
+                missing data, outliers, time zone issues, and constantly changing network conditions.
+            </p>
+
+            <p>
+                This experience made me much better at building observability systems. When you've
+                dealt with unreliable measurement data at internet scale, handling application metrics
+                feels almost easy.
+            </p>
+
+            <h2>How This Applies to Production Systems</h2>
+
+            <p>
+                You might be wondering: why does any of this matter for normal software engineering?
+                Most of us aren't building internet measurement platforms.
+            </p>
+
+            <p>
+                Here's the thing: if you're building distributed systems, you're relying on the
+                internet. And the internet is way more complicated and unreliable than most engineers
+                realize. Understanding how it actually works helps you build more resilient systems.
+            </p>
+
+            <h3>Specific lessons:</h3>
+
+            <ol>
+                <li>
+                    <strong>Don't trust latency assumptions.</strong> Measure actual latency between
+                    your components. Network conditions change, and what was true last month might
+                    not be true today.
+                </li>
+                <li>
+                    <strong>Build for failure.</strong> Any network path can fail at any time. Have
+                    fallbacks. Use circuit breakers. Assume that remote services will be unavailable
+                    sometimes.
+                </li>
+                <li>
+                    <strong>Understand your dependencies.</strong> Know which cloud regions your
+                    services run in. Know how traffic flows between them. Know what happens when
+                    a particular path goes down.
+                </li>
+                <li>
+                    <strong>Monitor at multiple layers.</strong> Application metrics are important,
+                    but so are network metrics. High latency or packet loss at the network layer
+                    will manifest as weird application behavior.
+                </li>
+                <li>
+                    <strong>Geographic distribution helps.</strong> Running services in multiple
+                    regions isn't just about being closer to users. It's about having redundancy
+                    when network paths fail.
+                </li>
+            </ol>
+
+            <h2>What I'm Doing With This Now</h2>
+
+            <p>
+                I moved from research to industry after Northwestern, joining Expedia. The work is
+                different but the lessons apply directly. When we're migrating millions of requests
+                between services, understanding network behavior helps predict what might go wrong.
+            </p>
+
+            <p>
+                I also find myself thinking about scale differently. When you've seen how much effort
+                goes into keeping the global internet running, you appreciate the complexity of any
+                large distributed system. It's not magic. It's thousands of small decisions and
+                optimizations and failure modes that people have figured out over time.
+            </p>
+
+            <p>
+                The internet is fragile and robust at the same time. Understanding how it actually
+                works made me a better engineer. If you get the chance to dig into the network layer,
+                take it. You'll learn things that make your application-level work make a lot more sense.
+            </p>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p>Built by Aman Khalid</p>
+    </footer>
+
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') html.setAttribute('data-theme', 'light');
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

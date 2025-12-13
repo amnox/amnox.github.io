@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migrating Millions of Requests Without Anyone Noticing | Aman Khalid</title>
+    <meta name="description" content="How we moved millions of daily requests from a legacy monolith to a modern distributed architecture at Expedia.">
+    <link rel="icon" href="/tile.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .blog-post {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 120px 25px 100px;
+        }
+        .blog-post-header {
+            margin-bottom: 50px;
+        }
+        .blog-post-date {
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .blog-post-title {
+            font-size: clamp(28px, 5vw, 42px);
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .blog-post-meta {
+            display: flex;
+            gap: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .blog-post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .blog-post-content p {
+            margin-bottom: 25px;
+        }
+        .blog-post-content h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin: 50px 0 20px;
+        }
+        .blog-post-content h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 30px 0 15px;
+        }
+        .blog-post-content ul, .blog-post-content ol {
+            margin-bottom: 25px;
+            padding-left: 25px;
+        }
+        .blog-post-content li {
+            margin-bottom: 10px;
+        }
+        .blog-post-content code {
+            background: var(--bg-secondary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+        }
+        .blog-post-content pre {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+        .blog-post-content pre code {
+            padding: 0;
+            background: none;
+        }
+        .blog-post-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav" id="nav">
+        <div class="nav-content">
+            <a href="/" class="nav-logo">AK</a>
+            <div class="nav-links">
+                <a href="/#about" class="nav-link">About</a>
+                <a href="/#experience" class="nav-link">Experience</a>
+                <a href="/#projects" class="nav-link">Projects</a>
+                <a href="/#blog" class="nav-link">Blog</a>
+                <a href="/#contact" class="nav-link">Contact</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <article class="blog-post">
+        <a href="/#blog" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all posts
+        </a>
+
+        <header class="blog-post-header">
+            <p class="blog-post-date">May 2024</p>
+            <h1 class="blog-post-title">Migrating Millions of Requests Without Anyone Noticing</h1>
+            <div class="blog-post-meta">
+                <span>12 min read</span>
+                <span>Distributed Systems, Migrations, Engineering</span>
+            </div>
+        </header>
+
+        <div class="blog-post-content">
+            <p>
+                Large-scale migrations are terrifying. You're essentially rebuilding the plane while it's flying,
+                except the plane handles millions of requests per day and if you break it, real people can't book
+                their vacations. No pressure.
+            </p>
+
+            <p>
+                Over the past year and a half, I've been working on migrating our lodging content service from a
+                legacy monolith to a modern distributed architecture. This post is about the playbook we used to
+                do it without anyone noticing. By "anyone" I mean customers. Our ops team definitely noticed. They
+                were very involved.
+            </p>
+
+            <h2>The Setup</h2>
+
+            <p>
+                Our legacy service, let's call it LSCS (Lodging Content Service), had been running for years.
+                It worked. It was battle-tested. It also had about a decade of accumulated technical debt, was
+                hard to change, and didn't fit well with our newer architecture.
+            </p>
+
+            <p>
+                The new system, Product Entity, was built around modern principles: smaller services, better
+                separation of concerns, gRPC for internal communication. The problem was getting there without
+                breaking anything.
+            </p>
+
+            <p>
+                Here's what made this migration particularly tricky:
+            </p>
+
+            <ul>
+                <li>Millions of daily requests across Expedia.com, Hotels.com, and Vrbo</li>
+                <li>Multiple downstream services depending on our data</li>
+                <li>Complex business logic that had evolved over years</li>
+                <li>Data that needed to stay consistent during the transition</li>
+            </ul>
+
+            <h2>The Playbook</h2>
+
+            <h3>Phase 1: Build the bridge first</h3>
+
+            <p>
+                Before we could migrate anything, we needed a way to run both systems simultaneously. We
+                implemented what we called "shadow mode": the new system would receive the same requests as
+                the old one, process them, but not return results to customers. Instead, we logged the
+                differences.
+            </p>
+
+            <p>
+                This sounds simple but took real effort. You need infrastructure for:
+            </p>
+
+            <ul>
+                <li>Duplicating traffic without adding latency to the main path</li>
+                <li>Comparing responses at scale (millions of comparisons per day)</li>
+                <li>Categorizing differences (bug vs. expected difference vs. data issue)</li>
+                <li>Dashboards to track progress</li>
+            </ul>
+
+            <p>
+                We caught a lot of bugs this way. The new system was returning slightly different data in
+                edge cases. Some of these were bugs in the new code. Some were actually bugs in the old
+                code that we'd been living with for years. We fixed both.
+            </p>
+
+            <h3>Phase 2: Feature gates everywhere</h3>
+
+            <p>
+                Every piece of new functionality was behind a feature gate. This let us:
+            </p>
+
+            <ul>
+                <li>Enable features for specific properties first (start with low-traffic ones)</li>
+                <li>Roll back instantly if something went wrong</li>
+                <li>Run A/B tests between old and new implementations</li>
+                <li>Enable features gradually across different brands</li>
+            </ul>
+
+            <p>
+                Feature gates added complexity to the code, but they were absolutely worth it. When you're
+                dealing with millions of requests, "we'll just roll back the deploy" isn't good enough.
+                You need finer control.
+            </p>
+
+            <h3>Phase 3: Traffic ramp-up</h3>
+
+            <p>
+                Once shadow mode showed the new system was producing correct results, we started actually
+                using it. But not all at once.
+            </p>
+
+            <p>
+                Our ramp-up schedule looked roughly like this:
+            </p>
+
+            <ol>
+                <li>1% of traffic to new system, with automatic rollback if error rate spikes</li>
+                <li>5%, then 10%, monitoring for latency regression</li>
+                <li>25%, then 50%, watching business metrics (conversion rates, etc.)</li>
+                <li>75%, then 100%</li>
+            </ol>
+
+            <p>
+                At each stage, we waited until metrics stabilized before moving forward. Some stages took
+                days. Some took weeks. You can't rush this part.
+            </p>
+
+            <h3>Phase 4: The chicken-and-egg problem</h3>
+
+            <p>
+                Here's where things got interesting. The legacy system had some data that the new system
+                needed, but we couldn't get that data without the legacy system. Classic chicken-and-egg.
+            </p>
+
+            <p>
+                Specifically, we needed "controlled offer IDs" that LSCS generated. These IDs were used
+                by downstream services. If we deprecated LSCS, we'd lose the ability to generate them.
+                But we needed to deprecate LSCS to complete the migration.
+            </p>
+
+            <p>
+                The solution was finding another service (LCD, ListDescendantIdentifierMappings) that could
+                provide the same IDs through a different path. This involved:
+            </p>
+
+            <ul>
+                <li>Discovering the service existed (not obvious in a large organization)</li>
+                <li>Understanding its API and data model</li>
+                <li>Building a gRPC integration</li>
+                <li>Validating the data matched what LSCS provided</li>
+            </ul>
+
+            <p>
+                Fun fact: during validation, we discovered that LCD's data was actually more accurate than
+                LSCS in some cases. We found 24 vacation rental properties with incorrect inventory IDs in
+                the legacy system. The migration made things better, not just equivalent.
+            </p>
+
+            <h2>What We Monitored</h2>
+
+            <p>
+                Monitoring was critical. Here's what we watched:
+            </p>
+
+            <h3>Technical metrics</h3>
+            <ul>
+                <li>Latency (p50, p95, p99) for both systems</li>
+                <li>Error rates by error type</li>
+                <li>Request volume (make sure traffic is actually flowing)</li>
+                <li>Cache hit rates</li>
+                <li>Downstream service health</li>
+            </ul>
+
+            <h3>Business metrics</h3>
+            <ul>
+                <li>Conversion rates (are people still booking?)</li>
+                <li>Search result quality</li>
+                <li>Page load times</li>
+                <li>Customer support tickets related to content</li>
+            </ul>
+
+            <h3>Diff metrics</h3>
+            <ul>
+                <li>Response differences between old and new systems</li>
+                <li>Categories of differences (known vs. unknown)</li>
+                <li>Trend over time (differences should decrease as we fix bugs)</li>
+            </ul>
+
+            <h2>Things That Went Wrong</h2>
+
+            <p>
+                Not everything was smooth. Some notable incidents:
+            </p>
+
+            <p>
+                <strong>The latency spike:</strong> When we hit 25% traffic, we saw latency increase. Turned out
+                the new service was making more downstream calls than expected. We had to optimize the batch
+                endpoint to fetch property and host data in parallel.
+            </p>
+
+            <p>
+                <strong>The logging bill:</strong> Our shadow mode logging was more verbose than anticipated.
+                We were logging full responses for comparison, which added up fast. Eventually we had to be
+                smarter about what we logged, which led to a broader effort to optimize our Splunk costs.
+                (That's a whole other story that saved $114k annually.)
+            </p>
+
+            <p>
+                <strong>The timezone bug:</strong> Dates were being interpreted differently between the two
+                systems. This only showed up for properties in certain timezones and only for bookings near
+                midnight. Classic edge case that you only find at scale.
+            </p>
+
+            <h2>Lessons Learned</h2>
+
+            <h3>Start with observability</h3>
+            <p>
+                Before you migrate anything, make sure you can see what's happening. We spent significant
+                effort on dashboards and alerting before writing any migration code. This paid off many
+                times over.
+            </p>
+
+            <h3>Small batches beat big bang</h3>
+            <p>
+                Every time we tried to do too much at once, we regretted it. Small, incremental changes
+                are easier to debug, easier to roll back, and less scary for everyone involved.
+            </p>
+
+            <h3>Business metrics matter more than technical metrics</h3>
+            <p>
+                At the end of the day, it doesn't matter if your p99 latency is 5ms faster if conversions
+                are down. Keep business metrics in view throughout the migration.
+            </p>
+
+            <h3>Documentation is not optional</h3>
+            <p>
+                We documented every decision, every rollback, every bug we found. This was invaluable when
+                onboarding new team members mid-migration and when we needed to explain decisions to
+                stakeholders.
+            </p>
+
+            <h3>Celebrate milestones</h3>
+            <p>
+                Migrations are long. It's easy to lose morale when you're months in and still not done.
+                We made a point to acknowledge when we hit 25%, 50%, 75%. Small celebrations keep the
+                team motivated.
+            </p>
+
+            <h2>The Result</h2>
+
+            <p>
+                We completed the migration. The old service is deprecated. The new architecture is running
+                in production, handling millions of requests daily. Customers didn't notice anything
+                changed, which was exactly the goal.
+            </p>
+
+            <p>
+                The new system is easier to maintain, easier to extend, and fits better with our overall
+                architecture. Was it worth the effort? I think so. But ask me again in a year when we've
+                had time to actually build new features on the improved foundation.
+            </p>
+
+            <p>
+                If you're about to embark on a large migration: good luck. It's hard, but it's doable.
+                Take it slow, measure everything, and don't skip the shadow mode phase. Your future self
+                will thank you.
+            </p>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p>Built by Aman Khalid</p>
+    </footer>
+
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') html.setAttribute('data-theme', 'light');
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

@@ -1,147 +1,518 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-        <meta content="utf-8" http-equiv="encoding">
-        <link rel="stylesheet" href="index.css">
-        <script src="https://cdn.jsdelivr.net/npm/pdfobject@2.2.6/pdfobject.min.js"></script>
-        <script defer src="js/all.js"></script>
-        <link rel="icon" href="/tile.png" type="image/x-icon">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Aman Khalid - Research, Code, and Networks</title>
-        <meta name=”description” content="I am a first year PhD student at NU. I am interested in broad networks research with a focus on Distributed Systems">
-    </head>
-    <style>
-        .Home{display:block;}
-        .Blog{display:none;}
-        .Publications{display:none;}
-        .Bio{display:none;}
-        .Contact{display:none;}
-    </style>
-    <body>
-        <div class="root">
-            <div class="title">
-                <div class="title-item" onclick='nav("Home")''>Home</div>
-                <div class="title-item" onclick='nav("Publications")''>Publications</div>
-                <div class="title-item" onclick='nav("Blog")''>Blog</div>
-                <div class="title-item" onclick='nav("Bio")''>Bio</div>
-                <div class="title-item" onclick='nav("Contact")''>Contact</div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aman Khalid | Software Engineer</title>
+    <meta name="description" content="Software Engineer specializing in distributed systems, internet measurement, and large-scale infrastructure. Currently at Expedia Group.">
+    <link rel="icon" href="/tile.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Cursor glow effect -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-content">
+            <a href="#" class="nav-logo">AK</a>
+            <div class="nav-links">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#experience" class="nav-link">Experience</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#blog" class="nav-link">Blog</a>
+                <a href="#contact" class="nav-link">Contact</a>
             </div>
-            <div class="title-mobile">
-                <div class="dropdown">
-                    <button onclick="myFunction()" class="dropbtn"><i class="fas fa-bars"></i></button>
-                    <div id="myDropdown" class="dropdown-content">
-                        <a href="#home" onclick='nav("Home")''>Home</a>
-                        <a href="#publications" onclick='nav("Publications")''>Publications</a>
-                        <a href="#blog" onclick='nav("Blog")''>Blog</a>
-                        <a href="#bio" onclick='nav("Bio")''>Bio</a>
-                        <a href="#contact" onclick='nav("Contact")''>Contact</a>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#about" class="mobile-link">About</a>
+        <a href="#experience" class="mobile-link">Experience</a>
+        <a href="#projects" class="mobile-link">Projects</a>
+        <a href="#blog" class="mobile-link">Blog</a>
+        <a href="#contact" class="mobile-link">Contact</a>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-name"><span class="hero-greeting">Hey, I'm</span>Aman Khalid</h1>
+                    <h2 class="hero-title">I build systems that scale.</h2>
+                    <p class="hero-description">
+                        Software Engineer at <span class="highlight">Expedia Group</span> specializing in distributed systems and large-scale migrations.
+                        Previously researched internet measurement and network infrastructure at <span class="highlight">Northwestern University</span>.
+                    </p>
+                    <div class="hero-cta">
+                        <a href="#experience" class="btn btn-primary">See my work</a>
+                        <a href="#contact" class="btn btn-secondary">Get in touch</a>
+                    </div>
+                    <div class="hero-links">
+                        <a href="https://github.com/amnox" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                        <a href="https://linkedin.com/in/amankhalid-linkedin" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                        </a>
+                        <a href="mailto:amankhalid1016@gmail.com" class="social-link" aria-label="Email">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </a>
                     </div>
                 </div>
-                <div class="title-item" id="title-header">Home</div>
+                <div class="hero-image">
+                    <div class="image-wrapper">
+                        <img src="photo.jpg" alt="Aman Khalid" class="profile-photo">
+                        <div class="image-border"></div>
+                    </div>
+                </div>
             </div>
-            <div class="Home">
-                <img class="mug" src="ak.png"/>
-            I am a first year Graduate Student student in the Computer Science Department at Northwestern University. I am interested in  broad computer networks research, more specifically distributed sytems. My last 2 pulished works focus on optmizing the internal data structures of large distributed systems. I also like to build systems for <a href="">global scale applicaitons</a><br><br>
-            My master's <a href="https://www.proquest.com/openview/1654a129cf91d5467da6d48ca9fff9b1/1?cbl=18750&diss=y&loginDisplay=true&pq-origsite=gscholar">thesis</a> addresses the performace gaps of running latency sensitive applications on the network edge and proposes a novel approach to manage and provision resources in a hybrid cloud.
+        </section>
 
-            I got my master's degree from Saint Louis University and completed my B. Tech from Amity Noida. I have 2 years experience of working as a software developer. And have worked with python, java and js.
-            <br><br>
-            <b>Recent Updates</b><br>
-            - Our work on EdgeEcho got accepted at CNSM<br>
-            - Completed my master's thesis at Saint Louis University<br>
-            - I was awarded Comsoc student award for my work on OCF<br>
-            </div>
-            <div class="Publications">
-                <div class="pub-item">Aman Khalid, Flavio Esposito, Alessio Sacco, and Steven C. Smart. <i>"EdgeEcho: An Architecture for Echocardiology at the Edge".</i> In IEEE 17th International Conference on Network and Service Management (CNSM 2021). Izmir, Turkey 25-29 October, 2021; (short paper).</div>
-                <div class="pub-item">
-                    A. Khalid and F. Esposito, <i>"Optimized Cuckoo Filters for Efficient Distributed SDN and NFV Applications,"</i> 2020 IEEE Conference on Network Function Virtualization and Software Defined Networks (NFV-SDN), 2020, pp. 77-83, doi: 10.1109/NFV-SDN50289.2020.9289870.
+        <!-- About Section -->
+        <section class="section about" id="about">
+            <h2 class="section-title"><span class="title-number">01.</span> About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        I'm a software engineer who likes building things that work at scale. My background is a bit unconventional -
+                        I started in academia researching how the internet actually works, then moved to industry to build systems
+                        that millions of people use every day.
+                    </p>
+                    <p>
+                        At Northwestern, I ran measurement campaigns across 33 cloud instances in 18 countries to understand
+                        how major cloud providers peer with each other and how submarine cables affect global connectivity.
+                        It sounds nerdy because it is - but it gave me a deep understanding of distributed systems that most
+                        engineers never get to see.
+                    </p>
+                    <p>
+                        Now at Expedia, I work on large-scale service migrations and infrastructure. I've led projects that
+                        saved $114k annually in infrastructure costs and improved test coverage from 52% to 85%. I also got
+                        picked to lead our team's adoption of AI coding tools, which has been pretty fun.
+                    </p>
+                    <p>Here are some technologies I work with regularly:</p>
+                    <ul class="skills-list">
+                        <li>Python</li>
+                        <li>Java / Kotlin</li>
+                        <li>Kubernetes</li>
+                        <li>gRPC</li>
+                        <li>AWS / Azure</li>
+                        <li>Distributed Systems</li>
+                    </ul>
                 </div>
             </div>
-            <div class="Blog">
-                <div class="blog-item">
-                    <a href="https://buttercms.com/blog/best-practices-for-building-a-large-scale-react-application" target="_blank">
-                    <img class="blog-image" src="blog/lrg.png"/>
-                    <p class="blog-name">Best practices for building a large scale react application</p>
-                    </a>
-                </div>
-                <div class="blog-item" >
-                    <a href="https://medium.com/hackernoon/how-i-made-a-service-like-s3-over-the-weekend-bfa83e224dc7" target="_blank">
-                    <img class="blog-image" src="blog/s3.jpeg"/>
-                    <p class="blog-name">How I made a Service like S3 over the weekend</p>
-                    </a>
-                </div>
-                <div class="blog-item">
-                    <a href="https://docs.google.com/document/d/e/2PACX-1vSejM3Yq1YUDA0S_h-bundUrSo19PPsaloJg5qaKTg_b1AOY4jihQjrwLewsxBbhiT16kdSAD1_08T9/pub" target="_blank">
-                    <img class="blog-image" src="blog/srv.png"/>
-                    <p class="blog-name">Top 5 reasons why serverless architecture is the best fit for your application</p>
-                    </a>
-                </div>
-                <div class="blog-item">
-                    <a href="https://www.linkedin.com/pulse/scraping-instagram-selenuim-aman-khalid/" target="_blank">
-                    <img class="blog-image" src="blog/sel.jpeg"/>
-                    <p class="blog-name">Scrping Instagram With Selenium</p>
-                    </a>
-                </div>
-                <div class="blog-item">
-                    <a href="https://github.com/amnox/scroll-accordion/wiki" target="_blank">
-                    <img class="blog-image" src="blog/acc.jpg"/>
-                    <p class="blog-name">Scroll accordion animation with js</p>
-                    </a>
-                </div>
-                <div class="blog-item">
-                    <a href="https://medium.com/hackernoon/creating-awesome-spas-with-react-66b4e2043621" target="_blank">
-                    <img class="blog-image" src="blog/spa.jpeg"/>
-                    <p class="blog-name">Creating Awesome SPAs with react</p>
-                    </a>
-                </div>
-            </div>
-            
-            <div class="Bio"><div id="resume"></div></div>
-            <div class="Contact">
-                <div class="gfrm"><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeMnsAr8BxzXvWvvaeE0CKVyCahXD-1hoE_G4I2tLZy4jLzBw/viewform?embedded=true" width="640" height="459" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe></div>
-            </div>
-        </div>
+        </section>
 
-    </body>
-    <script>
-        const pages = ['Home','Publications','Blog','Bio','Contact']
-        function nav(item){
-            
-            for (const element of pages) {
-            
-                x = document.getElementsByClassName(element)[0]
-                y = document.getElementById("title-header")
-                if(element==item){
-                    x.style.display = "block";
-                    y.innerHTML=item
-                }else{
-                    x.style.display = "none";
-                }
-            }
-        }
-        
-        PDFObject.embed("resume.pdf", "#resume");
+        <!-- Experience Section -->
+        <section class="section experience" id="experience">
+            <h2 class="section-title"><span class="title-number">02.</span> Where I've Worked</h2>
+            <div class="experience-content">
+                <div class="job">
+                    <div class="job-header">
+                        <h3 class="job-title">Software Development Engineer II <span class="job-company">@ Expedia Group</span></h3>
+                        <p class="job-date">Feb 2023 - Present</p>
+                    </div>
+                    <ul class="job-details">
+                        <li>Led a large-scale migration from legacy monolithic services to modern distributed APIs, affecting millions of daily requests across Vrbo, Hotels.com, and Expedia.com</li>
+                        <li>Designed and implemented gRPC service integrations to unblock critical migration dependencies</li>
+                        <li>Reduced annual infrastructure costs by 63% ($114k savings) through strategic logging optimization</li>
+                        <li>Drove test coverage from 52% to 85% by implementing Jacoco verification thresholds</li>
+                        <li>Selected as early adopter and technical lead for AI coding tools initiative - created deployment guides and delivered presentations across the organization</li>
+                    </ul>
+                </div>
+                <div class="job">
+                    <div class="job-header">
+                        <h3 class="job-title">Graduate Researcher <span class="job-company">@ Northwestern University</span></h3>
+                        <p class="job-date">Sep 2021 - Dec 2022</p>
+                    </div>
+                    <ul class="job-details">
+                        <li>Designed and executed internet measurement campaigns using 33 cloud instances across 18 geographic locations</li>
+                        <li>Built a Python data pipeline processing 179 daily measurements from 358 instances worldwide</li>
+                        <li>Operated a global submarine cable network outage monitoring platform for real-time anomaly detection</li>
+                        <li>Analyzed BGP routing patterns and ISP peering relationships to understand global internet topology</li>
+                    </ul>
+                </div>
+                <div class="job">
+                    <div class="job-header">
+                        <h3 class="job-title">Research Assistant <span class="job-company">@ Saint Louis University</span></h3>
+                        <p class="job-date">Oct 2019 - May 2021</p>
+                    </div>
+                    <ul class="job-details">
+                        <li>Built a real-time ultrasound image processing pipeline supporting 100 concurrent streaming sessions</li>
+                        <li>Implemented using Kubernetes orchestration with sub-100ms latency requirements</li>
+                        <li>Published research at IEEE NFV-SDN 2020 on optimization techniques for distributed systems</li>
+                    </ul>
+                </div>
+                <div class="job">
+                    <div class="job-header">
+                        <h3 class="job-title">Backend Software Engineer <span class="job-company">@ Marsplay</span></h3>
+                        <p class="job-date">May 2017 - Jul 2019</p>
+                    </div>
+                    <ul class="job-details">
+                        <li>Architected microservices-based backend infrastructure handling thousands of daily transactions</li>
+                        <li>Built internal CRM tools that improved user onboarding efficiency by 45%</li>
+                        <li>Designed REST APIs facilitating communication between internal services and external integrations</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-        /* When the user clicks on the button, 
-        toggle between hiding and showing the dropdown content */
-        function myFunction() {
-        document.getElementById("myDropdown").classList.toggle("show");
-        }
+        <!-- Projects Section -->
+        <section class="section projects" id="projects">
+            <h2 class="section-title"><span class="title-number">03.</span> Things I've Built</h2>
+            <div class="projects-grid">
+                <div class="project-card featured">
+                    <div class="project-content">
+                        <p class="project-overline">Featured Project</p>
+                        <h3 class="project-title">Global Internet Measurement Platform</h3>
+                        <div class="project-description">
+                            <p>
+                                A distributed measurement infrastructure spanning 18 countries that analyzed BGP routing patterns,
+                                ISP peering relationships, and submarine cable connectivity. Processed millions of traceroutes
+                                to understand how the internet actually works at a global scale.
+                            </p>
+                        </div>
+                        <ul class="project-tech">
+                            <li>Python</li>
+                            <li>AWS</li>
+                            <li>Azure</li>
+                            <li>BGP</li>
+                            <li>Data Pipelines</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project-card featured">
+                    <div class="project-content">
+                        <p class="project-overline">Featured Project</p>
+                        <h3 class="project-title">
+                            <a href="https://shedboxai.com/" target="_blank" rel="noopener noreferrer" style="color: inherit;">ShedboxAI Agent</a>
+                        </h3>
+                        <div class="project-description">
+                            <p>
+                                An open-source conversational AI agent that turns natural language into data workflows.
+                                Features a multi-tier memory system, specialist agents for complex tasks, and self-healing
+                                YAML generation. Built with a code-execution-first approach instead of traditional tool calling.
+                            </p>
+                        </div>
+                        <ul class="project-tech">
+                            <li>Python</li>
+                            <li>LiteLLM</li>
+                            <li>ChromaDB</li>
+                            <li>Pydantic</li>
+                            <li>asyncio</li>
+                        </ul>
+                        <div class="project-links" style="margin-top: 15px;">
+                            <a href="https://github.com/amnox/shedbox-agent" target="_blank" rel="noopener noreferrer" aria-label="GitHub" style="color: var(--accent);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                </svg>
+                            </a>
+                            <a href="https://shedboxai.com/" target="_blank" rel="noopener noreferrer" aria-label="Website" style="color: var(--accent); margin-left: 15px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-content">
+                        <div class="project-top">
+                            <div class="folder-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/amnox" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="project-title">EdgeEcho</h3>
+                        <p class="project-description-small">
+                            An architecture for echocardiography at the edge. Real-time ultrasound processing with sub-100ms
+                            latency using Kubernetes and Docker containerization.
+                        </p>
+                        <ul class="project-tech">
+                            <li>Java</li>
+                            <li>C++</li>
+                            <li>Kubernetes</li>
+                            <li>Docker</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-content">
+                        <div class="project-top">
+                            <div class="folder-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/amnox" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="project-title">Optimized Cuckoo Filters</h3>
+                        <p class="project-description-small">
+                            Research on optimizing probabilistic data structures for distributed SDN and NFV applications.
+                            Published at IEEE NFV-SDN 2020.
+                        </p>
+                        <ul class="project-tech">
+                            <li>Python</li>
+                            <li>SDN</li>
+                            <li>NFV</li>
+                            <li>Research</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-content">
+                        <div class="project-top">
+                            <div class="folder-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://medium.com/hackernoon/how-i-made-a-service-like-s3-over-the-weekend-bfa83e224dc7" target="_blank" rel="noopener noreferrer" aria-label="External Link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15 3 21 3 21 9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="project-title">S3 Clone</h3>
+                        <p class="project-description-small">
+                            Built a distributed object storage service similar to S3 over a weekend.
+                            A fun exploration of distributed storage concepts.
+                        </p>
+                        <ul class="project-tech">
+                            <li>Python</li>
+                            <li>Distributed Systems</li>
+                            <li>Storage</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-content">
+                        <div class="project-top">
+                            <div class="folder-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/amnox" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="project-title">Submarine Cable Monitor</h3>
+                        <p class="project-description-small">
+                            Real-time monitoring platform tracking connectivity health of undersea internet infrastructure
+                            with anomaly detection for outages.
+                        </p>
+                        <ul class="project-tech">
+                            <li>Python</li>
+                            <li>Monitoring</li>
+                            <li>Analytics</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        // Close the dropdown if the user clicks outside of it
-        window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-            }
-        }
-        }
-    </script>
-    
+        <!-- Blog Section -->
+        <section class="section blog" id="blog">
+            <h2 class="section-title"><span class="title-number">04.</span> Writing</h2>
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-content">
+                        <h3 class="blog-title">
+                            <a href="/blog/posts/building-ai-agents.html" class="blog-link">What I Learned Building an AI Agent From Scratch</a>
+                        </h3>
+                        <p class="blog-excerpt">
+                            Lessons from building ShedboxAI Agent. Why code execution beats tool calling, why small
+                            specialists beat one big agent, and why context management is the whole game.
+                        </p>
+                        <ul class="blog-tags">
+                            <li>AI</li>
+                            <li>Agents</li>
+                            <li>Python</li>
+                        </ul>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-content">
+                        <h3 class="blog-title">
+                            <a href="/blog/posts/ai-tooling-adoption.html" class="blog-link">What I Learned Leading Our Team's AI Tooling Adoption</a>
+                        </h3>
+                        <p class="blog-excerpt">
+                            Getting picked to lead our team's Claude Code adoption was equal parts exciting and terrifying.
+                            Here's what actually worked, what didn't, and why I think AI pair programming is here to stay.
+                        </p>
+                        <ul class="blog-tags">
+                            <li>AI</li>
+                            <li>Developer Tools</li>
+                            <li>Leadership</li>
+                        </ul>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-content">
+                        <h3 class="blog-title">
+                            <a href="/blog/posts/large-scale-migrations.html" class="blog-link">Migrating Millions of Requests Without Anyone Noticing</a>
+                        </h3>
+                        <p class="blog-excerpt">
+                            Large-scale migrations are terrifying. Here's the playbook we used at Expedia to move millions
+                            of daily requests from a legacy monolith to a modern distributed architecture without breaking anything.
+                        </p>
+                        <ul class="blog-tags">
+                            <li>Distributed Systems</li>
+                            <li>Migrations</li>
+                            <li>Engineering</li>
+                        </ul>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-content">
+                        <h3 class="blog-title">
+                            <a href="/blog/posts/internet-measurements.html" class="blog-link">What Running Internet Measurements Taught Me About Distributed Systems</a>
+                        </h3>
+                        <p class="blog-excerpt">
+                            I spent a year at Northwestern sending packets across the globe and watching what happened.
+                            Turns out the internet is way more fragile and fascinating than most engineers realize.
+                        </p>
+                        <ul class="blog-tags">
+                            <li>Networking</li>
+                            <li>Research</li>
+                            <li>Infrastructure</li>
+                        </ul>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-content">
+                        <h3 class="blog-title">
+                            <a href="https://medium.com/hackernoon/how-i-made-a-service-like-s3-over-the-weekend-bfa83e224dc7" target="_blank" class="blog-link">How I Made a Service Like S3 Over the Weekend</a>
+                        </h3>
+                        <p class="blog-excerpt">
+                            Sometimes the best way to understand something is to build it yourself.
+                            Here's my weekend adventure in distributed object storage.
+                        </p>
+                        <ul class="blog-tags">
+                            <li>Distributed Systems</li>
+                            <li>Storage</li>
+                            <li>Tutorial</li>
+                        </ul>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-content">
+                        <h3 class="blog-title">
+                            <a href="https://buttercms.com/blog/best-practices-for-building-a-large-scale-react-application" target="_blank" class="blog-link">Best Practices for Building a Large Scale React Application</a>
+                        </h3>
+                        <p class="blog-excerpt">
+                            Lessons learned from building and maintaining React apps that actually scale.
+                            Spoiler: most "best practices" articles miss the hard parts.
+                        </p>
+                        <ul class="blog-tags">
+                            <li>React</li>
+                            <li>Frontend</li>
+                            <li>Architecture</li>
+                        </ul>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-content">
+                        <h3 class="blog-title">
+                            <a href="https://medium.com/hackernoon/creating-awesome-spas-with-react-66b4e2043621" target="_blank" class="blog-link">Creating Awesome SPAs with React</a>
+                        </h3>
+                        <p class="blog-excerpt">
+                            A practical guide to building single-page applications that don't suck.
+                            Routing, state management, and all the gotchas nobody tells you about.
+                        </p>
+                        <ul class="blog-tags">
+                            <li>React</li>
+                            <li>SPA</li>
+                            <li>JavaScript</li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section contact" id="contact">
+            <h2 class="section-title"><span class="title-number">05.</span> Get In Touch</h2>
+            <div class="contact-content">
+                <p class="contact-text">
+                    I'm always open to chatting about interesting problems, new opportunities, or just nerding out about
+                    distributed systems and internet infrastructure. My inbox is always open.
+                </p>
+                <a href="mailto:amankhalid1016@gmail.com" class="btn btn-primary btn-large">Say Hello</a>
+                <div class="contact-links">
+                    <a href="https://github.com/amnox" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <span class="separator">|</span>
+                    <a href="https://linkedin.com/in/amankhalid-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <span class="separator">|</span>
+                    <a href="mailto:amankhalid1016@gmail.com">amankhalid1016@gmail.com</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Built by Aman Khalid</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
 </html>
