@@ -874,10 +874,35 @@ body:hover .cursor-glow {
 
     .hero {
         padding: 0 25px;
+        padding-top: calc(var(--nav-height) + 20px);
+        padding-bottom: 40px;
+        min-height: auto;
+    }
+
+    /* Disable all hero animations on mobile */
+    .hero-name,
+    .hero-title,
+    .hero-description,
+    .hero-cta,
+    .hero-links,
+    .hero-image {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+
+    .hero-content {
+        transform: none !important;
+        opacity: 1 !important;
     }
 
     .section {
         padding: var(--section-padding) 25px;
+        position: relative;
+        z-index: 2;
+        background-color: var(--bg-primary);
+        transform: none;
+        opacity: 1;
     }
 
     .section-title::after {
@@ -929,7 +954,7 @@ body:hover .cursor-glow {
 
     .image-wrapper {
         width: 180px;
-        height: 180px;
+        height: 220px;
     }
 }
 

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microservices Are Making Engineers Dumber | Aman Khalid</title>
+    <meta name="description" content="A pragmatic look at why the industry's favorite architecture pattern might be solving problems you don't have, while creating ones you definitely didn't need.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Microservices Are Making Engineers Dumber">
+    <meta property="og:description" content="A pragmatic look at why the industry's favorite architecture pattern might be solving problems you don't have.">
+    <meta property="og:image" content="https://amankhalid.com/blog/posts/microservices.png">
+    <meta property="og:url" content="https://amankhalid.com/blog/posts/microservices-making-engineers-dumber.html">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Microservices Are Making Engineers Dumber">
+    <meta name="twitter:description" content="A pragmatic look at why the industry's favorite architecture pattern might be solving problems you don't have.">
+    <meta name="twitter:image" content="https://amankhalid.com/blog/posts/microservices.png">
+
+    <link rel="icon" href="/tile.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .blog-post {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 120px 25px 100px;
+        }
+        .blog-post-header {
+            margin-bottom: 50px;
+        }
+        .blog-post-date {
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .blog-post-title {
+            font-size: clamp(28px, 5vw, 42px);
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .blog-post-meta {
+            display: flex;
+            gap: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .blog-post-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        .blog-post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .blog-post-content p {
+            margin-bottom: 25px;
+        }
+        .blog-post-content h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin: 50px 0 20px;
+        }
+        .blog-post-content h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 30px 0 15px;
+        }
+        .blog-post-content ul, .blog-post-content ol {
+            margin-bottom: 25px;
+            padding-left: 25px;
+        }
+        .blog-post-content li {
+            margin-bottom: 10px;
+        }
+        .blog-post-content code {
+            background: var(--bg-secondary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+        }
+        .blog-post-content pre {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+        .blog-post-content pre code {
+            padding: 0;
+            background: none;
+        }
+        .blog-post-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        .blog-post-content hr {
+            border: none;
+            border-top: 1px solid var(--bg-tertiary);
+            margin: 40px 0;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav" id="nav">
+        <div class="nav-content">
+            <a href="/" class="nav-logo">AK</a>
+            <div class="nav-links">
+                <a href="/#about" class="nav-link">About</a>
+                <a href="/#experience" class="nav-link">Experience</a>
+                <a href="/#projects" class="nav-link">Projects</a>
+                <a href="/#blog" class="nav-link">Blog</a>
+                <a href="/#contact" class="nav-link">Contact</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <article class="blog-post">
+        <a href="/#blog" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all posts
+        </a>
+
+        <header class="blog-post-header">
+            <p class="blog-post-date">December 2025</p>
+            <h1 class="blog-post-title">Microservices Are Making Engineers Dumber</h1>
+            <div class="blog-post-meta">
+                <span>10 min read</span>
+                <span>Architecture, Microservices, Engineering</span>
+            </div>
+        </header>
+
+        <img src="microservices.png" alt="Microservices architecture diagram" class="blog-post-image">
+
+        <div class="blog-post-content">
+            <p>
+                A pragmatic look at why the industry's favorite architecture pattern might be solving problems you don't have, while creating ones you definitely didn't need.
+            </p>
+
+            <hr>
+
+            <h2>The Hype Cycle</h2>
+
+            <p>
+                In the 2010s, Netflix and Amazon told the world they used microservices. The industry went wild. Microservices became synonymous with "serious engineering." Monoliths became "legacy." Almost an insult.
+            </p>
+
+            <p>
+                Then the backlash came. Prominent engineers started admitting they'd moved back to monoliths and everything got better. Amazon Prime Video published a case study about consolidating microservices and cutting costs by 90%.
+            </p>
+
+            <p>
+                So what's actually going on?
+            </p>
+
+            <hr>
+
+            <h2>What Problem Does Microservices Actually Solve?</h2>
+
+            <p>
+                Here's the honest answer: <strong>it's mostly an organizational problem, not a technical one.</strong>
+            </p>
+
+            <p>
+                At Netflix/Amazon/Google scale, you have hundreds of engineers across dozens of teams who can't all coordinate on one codebase without stepping on each other. Different teams need different release schedules. Too much code for any one person to understand.
+            </p>
+
+            <p>
+                Microservices let Team A deploy on Tuesday without waiting for Team B. Clear ownership boundaries. Less merge conflict hell.
+            </p>
+
+            <p>
+                That's the real win. Everything else is retrofitted justification.
+            </p>
+
+            <hr>
+
+            <h2>Debunking the Technical Arguments</h2>
+
+            <h3>"We Need Independent Scaling"</h3>
+
+            <p>
+                The pitch: Your search function gets 100x more traffic than your settings page. With microservices, you scale just search.
+            </p>
+
+            <p>
+                The reality: You can scale infrastructure selectively without breaking up your codebase.
+            </p>
+
+            <ul>
+                <li>Run multiple monolith instances behind a load balancer</li>
+                <li>Use async job queues for heavy work</li>
+                <li>Use serverless functions for specific high-traffic endpoints</li>
+                <li>Let autoscaling handle the rest</li>
+            </ul>
+
+            <p>
+                And here's the math that gets ignored: if you have 100% compute and one feature demands more, you scale the whole thing. The "waste" on other features is trivial compared to the engineering cost of maintaining distributed infrastructure.
+            </p>
+
+            <p>
+                Modern infrastructure supports smarter vertical scaling too. Instead of spinning up 1000 tiny 512MB containers, run 100 fat 4GB instances. Fewer network hops, fewer orchestration headaches, fewer points of failure.
+            </p>
+
+            <p>
+                Compute is cheap. Engineering time is expensive. Distributed systems debugging is <em>really</em> expensive.
+            </p>
+
+            <h3>"We Need Blast Radius Isolation"</h3>
+
+            <p>
+                The pitch: If one service crashes, the others keep running.
+            </p>
+
+            <p>
+                The reality: A well-structured monolith with proper error handling, circuit breakers, and multiple instances behind a load balancer has pretty good fault isolation already.
+            </p>
+
+            <p>
+                Meanwhile, microservices introduce <em>new</em> blast radius problems. One service gets slow, downstream services queue up, timeouts cascade, and suddenly everything is drowning together anyway.
+            </p>
+
+            <h3>"We Need Faster Builds and Deploys"</h3>
+
+            <p>
+                The pitch: Our monolith takes an hour to build. Microservices let us ship faster.
+            </p>
+
+            <p>
+                The reality: Modern build tools (Gradle, Bazel) do incremental compilation. Distributed build caching shares artifacts across CI runs. A modular monolith can build only what changed.
+            </p>
+
+            <p>
+                But what about testing? Don't you need full end-to-end tests for every change?
+            </p>
+
+            <p>
+                No. You don't. And here's the uncomfortable truth: <strong>microservices don't solve this problem, they hide it.</strong>
+            </p>
+
+            <p>
+                With microservices, you deploy your one service fast, but you still need E2E tests across services to catch integration breaks. Except now those tests are harder to write and flakier. So teams often just skip them. Ship and pray.
+            </p>
+
+            <p>
+                The actual solution is better test architecture:
+            </p>
+
+            <ul>
+                <li>Strong module boundaries with defined contracts</li>
+                <li>Contract tests that verify interfaces without running the whole system</li>
+                <li>Tiered testing: unit tests on every change, integration tests on affected modules, full E2E for critical paths or nightly runs</li>
+                <li>Good observability and fast rollback</li>
+            </ul>
+
+            <hr>
+
+            <h2>The Modular Monolith: The Boring Right Answer</h2>
+
+            <p>
+                What if you could have:
+            </p>
+
+            <ul>
+                <li>> One codebase, one deployable unit</li>
+                <li>> Strict internal module boundaries</li>
+                <li>> Modules communicating through defined interfaces</li>
+                <li>> Each module owning its own tests</li>
+                <li>> Fast incremental builds</li>
+                <li>> Scoped test runs</li>
+                <li>> Simple deployment</li>
+                <li>> Simple debugging</li>
+                <li>> Clear team ownership</li>
+            </ul>
+
+            <p>
+                That's the modular monolith. One deployable thing, but internally structured like separate concerns.
+            </p>
+
+            <p>
+                On deploy: run unit tests for the changed module, run contract tests to verify interfaces, ship it. Full E2E saved for critical paths.
+            </p>
+
+            <p>
+                The catch? Microservices enforce boundaries through network walls. Monoliths require discipline. But if your team respects module boundaries, you get 80% of the organizational benefit with 20% of the complexity.
+            </p>
+
+            <hr>
+
+            <h2>The Real Cost: Engineers Who Can't Think in Systems</h2>
+
+            <p>
+                Here's the thing that bothers me most.
+            </p>
+
+            <p>
+                In a monolith, you can grep the codebase. You can trace a request from entry to database and back. You might not understand all of it, but you <em>can</em> if you want to. The knowledge is accessible.
+            </p>
+
+            <p>
+                In microservices, half the system is behind network calls to services you don't own, can't see, and might not even have repo access to. You learn to treat everything as black boxes.
+            </p>
+
+            <p>
+                What this produces:
+            </p>
+
+            <ul>
+                <li>> Engineers who can't reason about systems holistically</li>
+                <li>> Debugging becomes archaeology across five teams' Slack channels</li>
+                <li>> Nobody owns the full user experience</li>
+                <li>> "Senior knowledge" becomes knowing which service to ask about, not how things actually work</li>
+            </ul>
+
+            <p>
+                The counterargument is that at true scale, no single person can understand everything anyway. Specialization is inevitable.
+            </p>
+
+            <p>
+                Sure. But microservices accelerate and enforce that fragmentation prematurely. A 50-person company doesn't need Netflix's isolation. They just imported Netflix's problems without Netflix's traffic.
+            </p>
+
+            <p>
+                The deeper loss: engineers who grew up only touching one service never learn to think in systems. That's a skill atrophying across the industry.
+            </p>
+
+            <hr>
+
+            <h2>The Bottom Line</h2>
+
+            <p>
+                Microservices solve one real problem: "We have 500 engineers and they can't all work on one codebase without chaos."
+            </p>
+
+            <p>
+                If that's not your problem, you're probably importing complexity for no reason.
+            </p>
+
+            <p>
+                The technical justifications (scaling, blast radius, deploy speed) are solvable without fragmenting your system. The tooling exists. The patterns exist. They're just less fashionable.
+            </p>
+
+            <p>
+                Meanwhile, the industry keeps producing engineers who've never traced a request through a complete system, never debugged without distributed tracing tools, never understood how the pieces fit together.
+            </p>
+
+            <p>
+                Maybe that's fine. Or maybe we're trading away something important for architectural purity we didn't need.
+            </p>
+
+            <hr>
+
+            <blockquote>
+                This post emerged from a conversation where I tried to steelman microservices and kept finding the arguments hollow. Sometimes the boring answer is the right one.
+            </blockquote>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p>Built by Aman Khalid</p>
+    </footer>
+
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') html.setAttribute('data-theme', 'light');
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>

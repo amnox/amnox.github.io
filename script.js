@@ -150,9 +150,24 @@ const heroContent = document.querySelector('.hero-content');
 
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
-    if (scrolled < window.innerHeight) {
-        heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
-        heroContent.style.opacity = 1 - (scrolled / window.innerHeight) * 0.5;
+    const windowHeight = window.innerHeight;
+
+    // Skip parallax on mobile (handled by CSS)
+    if (window.innerWidth <= 768) {
+        return;
+    }
+
+    if (scrolled < windowHeight) {
+        // Accelerate hero scroll - moves up faster than scroll
+        // The multiplier increases as you scroll more (starts at 1, goes up to 2.5)
+        const acceleration = 1 + (scrolled / windowHeight) * 1.5;
+        const translateY = scrolled * acceleration;
+
+        // Fade out faster
+        const opacity = Math.max(0, 1 - (scrolled / windowHeight) * 1.5);
+
+        heroContent.style.transform = `translateY(-${translateY}px)`;
+        heroContent.style.opacity = opacity;
     }
 });
 
