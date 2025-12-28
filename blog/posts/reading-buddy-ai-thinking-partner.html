@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Should Make You Smarter, Not Lazier | Aman Khalid</title>
+    <meta name="description" content="Why I built ReadingBuddy - a Chrome extension for AI-powered reading assistance. Thoughts on privacy, learning, and using AI as a thinking partner instead of a crutch.">
+    <link rel="canonical" href="https://amankhalid.com/blog/posts/reading-buddy-ai-thinking-partner.html">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="AI Should Make You Smarter, Not Lazier">
+    <meta property="og:description" content="Why I built ReadingBuddy - thoughts on privacy, learning, and using AI as a thinking partner instead of a crutch.">
+    <meta property="og:image" content="https://amankhalid.com/blog/posts/reading-buddy.png">
+    <meta property="og:url" content="https://amankhalid.com/blog/posts/reading-buddy-ai-thinking-partner.html">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AI Should Make You Smarter, Not Lazier">
+    <meta name="twitter:description" content="Why I built ReadingBuddy - thoughts on privacy, learning, and using AI as a thinking partner instead of a crutch.">
+    <meta name="twitter:image" content="https://amankhalid.com/blog/posts/reading-buddy.png">
+
+    <!-- Additional SEO -->
+    <meta name="keywords" content="AI, privacy, learning, Chrome extension, Ollama, local LLM, ReadingBuddy, AI ethics, productivity">
+    <meta name="author" content="Aman Khalid">
+    <meta name="robots" content="index, follow">
+
+    <link rel="icon" href="/tile.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .blog-post {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 120px 25px 100px;
+        }
+        .blog-post-header {
+            margin-bottom: 50px;
+        }
+        .blog-post-date {
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .blog-post-title {
+            font-size: clamp(28px, 5vw, 42px);
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .blog-post-meta {
+            display: flex;
+            gap: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .blog-post-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        .blog-post-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .blog-post-content p {
+            margin-bottom: 25px;
+        }
+        .blog-post-content h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin: 50px 0 20px;
+        }
+        .blog-post-content h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 30px 0 15px;
+        }
+        .blog-post-content ul, .blog-post-content ol {
+            margin-bottom: 25px;
+            padding-left: 25px;
+        }
+        .blog-post-content li {
+            margin-bottom: 10px;
+        }
+        .blog-post-content code {
+            background: var(--bg-secondary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+        }
+        .blog-post-content pre {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+        .blog-post-content pre code {
+            padding: 0;
+            background: none;
+        }
+        .blog-post-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        .blog-post-content hr {
+            border: none;
+            border-top: 1px solid var(--bg-tertiary);
+            margin: 40px 0;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav" id="nav">
+        <div class="nav-content">
+            <a href="/" class="nav-logo">AK</a>
+            <div class="nav-links">
+                <a href="/#about" class="nav-link">About</a>
+                <a href="/#experience" class="nav-link">Experience</a>
+                <a href="/#projects" class="nav-link">Projects</a>
+                <a href="/#blog" class="nav-link">Blog</a>
+                <a href="/#contact" class="nav-link">Contact</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <article class="blog-post">
+        <a href="/#blog" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all posts
+        </a>
+
+        <header class="blog-post-header">
+            <p class="blog-post-date">December 2025</p>
+            <h1 class="blog-post-title">AI Should Make You Smarter, Not Lazier</h1>
+            <div class="blog-post-meta">
+                <span>8 min read</span>
+                <span>AI, Privacy, Learning, Tools</span>
+            </div>
+        </header>
+
+        <div class="blog-post-content">
+            <p>
+                I've been thinking a lot about how we use AI. And honestly, I'm worried we're doing it wrong.
+            </p>
+
+            <p>
+                Not "wrong" in a moral panic, robots-are-coming-for-us way. Wrong in a much more boring way: we're using tools that could make us smarter to instead make us lazier. And in the process, we're handing over our data, our thoughts, and our learning to companies that don't have our best interests at heart.
+            </p>
+
+            <p>
+                This post is about why I built <a href="https://github.com/ShedBoxAI/reading_buddy">ReadingBuddy</a>, a Chrome extension for AI-powered reading assistance. But more than that, it's about the philosophy behind it.
+            </p>
+
+            <hr>
+
+            <h2>The Privacy Problem Nobody Talks About</h2>
+
+            <p>
+                Here's something that bothers me: every time you paste something into ChatGPT, you're sending your thoughts to OpenAI's servers. Every Google search, every Claude conversation, every Copilot suggestion. It all gets logged, processed, and stored somewhere you don't control.
+            </p>
+
+            <p>
+                Most people shrug at this. "I have nothing to hide." But that misses the point.
+            </p>
+
+            <p>
+                The issue isn't that you're hiding something. The issue is that your learning process is deeply personal. The questions you ask, the concepts you struggle with, the things you're curious about. It's a map of your mind. And you're handing that map to corporations whose business model is monetizing your data.
+            </p>
+
+            <p>
+                When you ask an AI to explain quantum entanglement, you're revealing that you don't understand quantum entanglement. When you ask it to help debug your code, you're revealing what you're building and where you're stuck. When you ask it to summarize an article about a medical condition, you're revealing your health concerns.
+            </p>
+
+            <p>
+                None of this is "bad" in isolation. But aggregated over time, it's an incredibly detailed profile of who you are, what you know, what you don't know, and what you care about.
+            </p>
+
+            <p>
+                The alternative exists. You can run AI models locally. Ollama makes it dead simple to run Llama, Mistral, Qwen, and dozens of other models on your own machine. Your questions never leave your computer. No logs. No tracking. No "we may use your conversations to improve our models."
+            </p>
+
+            <p>
+                This was the first principle behind ReadingBuddy: <strong>privacy by default</strong>. Local models first. Cloud APIs as an option for people who want them, not as the only choice.
+            </p>
+
+            <hr>
+
+            <h2>AI as a Crutch vs. AI as a Partner</h2>
+
+            <p>
+                Here's where it gets more nuanced.
+            </p>
+
+            <p>
+                I've watched people use AI in two very different ways. The first way: "Write this email for me." "Summarize this article so I don't have to read it." "Generate a blog post about X." The AI does the thinking. The human copies and pastes.
+            </p>
+
+            <p>
+                The second way: "I don't understand this paragraph. Can you explain what the author means by 'eventual consistency'?" "I'm trying to decide between these two approaches. What are the tradeoffs I might be missing?" "Here's my rough draft. What's unclear or unconvincing?"
+            </p>
+
+            <p>
+                The difference is subtle but massive. In the first mode, you're outsourcing cognition. In the second mode, you're augmenting it.
+            </p>
+
+            <p>
+                I'm not being preachy here. I've done plenty of the first mode. Sometimes you just need to get something done and you don't care about learning. That's fine.
+            </p>
+
+            <p>
+                But when it becomes your default mode, something atrophies. You stop developing the mental muscles that come from struggling with hard problems. You become dependent on the tool in a way that makes you worse at thinking without it.
+            </p>
+
+            <p>
+                The engineers I most respect use AI differently. They use it to accelerate learning, not bypass it. They ask it questions. They have it explain concepts. They use it as a sparring partner for ideas. But when it comes to the actual thinking, the synthesis, the judgment calls, the creative leaps? They do that themselves.
+            </p>
+
+            <hr>
+
+            <h2>The Reading Problem</h2>
+
+            <p>
+                I read a lot. Technical blogs, research papers, documentation, long-form journalism. And I kept running into the same friction: I'd hit a paragraph I didn't fully understand, and I had two choices.
+            </p>
+
+            <p>
+                Option one: open a new tab, search for an explanation, wade through SEO garbage, maybe find something useful, lose my place in the original article, forget what I was reading about. A five-minute detour that breaks my flow.
+            </p>
+
+            <p>
+                Option two: just keep reading and hope it makes sense later. Sometimes it does. Often it doesn't, and I finish the article with gaps in my understanding.
+            </p>
+
+            <p>
+                Neither option is great. What I wanted was something like having a knowledgeable friend sitting next to me who I could tap on the shoulder and ask "hey, what does this mean?" without it being a whole thing.
+            </p>
+
+            <p>
+                That's what ReadingBuddy is. Highlight text. Click. Get an explanation. Ask follow-up questions if you need them. Stay in the flow of what you're reading.
+            </p>
+
+            <p>
+                It's not about having AI summarize articles so you can skip reading them. It's about removing the friction that makes deep reading harder than it needs to be.
+            </p>
+
+            <hr>
+
+            <h2>Why Not Just Use ChatGPT?</h2>
+
+            <p>
+                Fair question. You could copy text, paste it into ChatGPT, ask your question, copy the response back. People do this all the time.
+            </p>
+
+            <p>
+                Three reasons I wanted something different:
+            </p>
+
+            <h3>1. Context Switching Kills Focus</h3>
+
+            <p>
+                Every time you leave the page you're reading, you pay a cognitive tax. You have to remember where you were, what you were thinking about, what question you had. By the time you get the answer and switch back, you've lost momentum.
+            </p>
+
+            <p>
+                ReadingBuddy keeps you on the page. The explanation appears right there, next to the text you highlighted. Your eyes never leave what you're reading.
+            </p>
+
+            <h3>2. Privacy (Again)</h3>
+
+            <p>
+                With ReadingBuddy running on Ollama, nothing leaves your machine. Not the article you're reading, not your questions, not your learning history. With ChatGPT, everything goes to OpenAI's servers.
+            </p>
+
+            <p>
+                For a lot of reading, that matters. Technical docs at work, research in sensitive areas, anything you'd rather keep private.
+            </p>
+
+            <h3>3. Customization</h3>
+
+            <p>
+                I wanted short, focused explanations by default. Not the verbose, hedge-everything style that ChatGPT defaults to. ReadingBuddy gives you a 2-3 sentence explanation and then asks if you want more detail. Most of the time, you don't.
+            </p>
+
+            <p>
+                You can also choose your model. Smaller models for speed, larger ones for complex topics. Local models for privacy, cloud APIs when you need more capability. Your choice, not someone else's default.
+            </p>
+
+            <hr>
+
+            <h2>The Technical Bit</h2>
+
+            <p>
+                If you're curious about how it works:
+            </p>
+
+            <ul>
+                <li>Chrome Extension (Manifest V3)</li>
+                <li>TypeScript + Webpack build</li>
+                <li>Streaming responses via port-based messaging</li>
+                <li>Supports Ollama (local), OpenAI, and Anthropic</li>
+                <li>Glassmorphism UI because I have taste (debatable)</li>
+            </ul>
+
+            <p>
+                The Ollama integration was the trickiest part. Chrome extensions have CORS restrictions that make it annoying to talk to localhost services. We handle this by setting <code>OLLAMA_ORIGINS</code> on the Ollama server side.
+            </p>
+
+            <p>
+                Streaming was important. Nobody wants to wait 10 seconds staring at a spinner. You want to see the response forming, word by word. This required port-based communication between the content script and service worker, with chunked messages as the LLM generates tokens.
+            </p>
+
+            <p>
+                The whole thing is open source: <a href="https://github.com/ShedBoxAI/reading_buddy">github.com/ShedBoxAI/reading_buddy</a>
+            </p>
+
+            <hr>
+
+            <h2>The Bigger Picture</h2>
+
+            <p>
+                I think we're at an inflection point with AI tools. The technology is good enough now that it can genuinely accelerate learning and thinking. But the default way most people use it, and the way most products encourage you to use it, optimizes for convenience over growth.
+            </p>
+
+            <p>
+                The question isn't "should I use AI?" It's "how should I use AI in a way that makes me better, not more dependent?"
+            </p>
+
+            <p>
+                For me, that means:
+            </p>
+
+            <ul>
+                <li><strong>Privacy first.</strong> Run local when possible. Be intentional about what you send to cloud services.</li>
+                <li><strong>Augment, don't replace.</strong> Use AI to help you understand, not to do the understanding for you.</li>
+                <li><strong>Stay in control.</strong> Choose your tools. Configure them how you want. Don't just accept defaults designed to maximize engagement.</li>
+            </ul>
+
+            <p>
+                ReadingBuddy is my attempt to build a tool that embodies these principles. It's small and focused. It does one thing. It respects your privacy. And it's designed to help you learn, not to learn for you.
+            </p>
+
+            <p>
+                Try it out. Break it. Tell me what sucks. Make it better.
+            </p>
+
+            <hr>
+
+            <blockquote>
+                ReadingBuddy is free and open source. Install it from the <a href="https://github.com/ShedBoxAI/reading_buddy">GitHub repo</a>, or wait for the Chrome Web Store listing (coming soon).
+            </blockquote>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p>Built by Aman Khalid</p>
+    </footer>
+
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') html.setAttribute('data-theme', 'light');
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>
